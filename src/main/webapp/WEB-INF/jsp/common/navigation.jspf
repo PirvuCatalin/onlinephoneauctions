@@ -8,7 +8,7 @@
         <ul class="nav navbar-nav">
             <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/welcome.jsp")){%>active<%}%>"><a href="/">Home</a></li>
             <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/account.jsp")){%>active<%}%>"><a href="/account">Account</a></li>
-            <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/auctions.jsp")){%>active<%}%>"><a href="/auctions">Auctions</a></li>
+            <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/auctions.jsp") || request.getRequestURI().equals("/WEB-INF/jsp/auctions-add.jsp")){%>active<%}%>"><a href="/auctions">Auctions</a></li>
             <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/list-todos.jsp")){%>active<%}%>"><a href="/list-todos">Todos</a></li>
         </ul>
         <ul class="<% if(request.getUserPrincipal() == null){%>hidden<%}%> nav navbar-nav navbar-right">

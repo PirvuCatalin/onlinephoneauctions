@@ -46,7 +46,7 @@
                         </tbody>
                     </table>
                     <c:if test="${user_id == auction.seller_id}">
-                        <a type="button" class="btn btn-primary" href="/update-todo?id=${todo.id}">Edit</a>
+                        <a type="button" class="btn btn-primary" href="/auctions-add?id=${auction.id}">Edit</a>
                         <a type="button" class="btn btn-warning" href="/auctions/delete?id=${auction.id}">Delete</a>
                     </c:if>
                 </div>

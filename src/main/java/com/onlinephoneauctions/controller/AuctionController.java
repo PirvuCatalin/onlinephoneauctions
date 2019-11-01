@@ -6,14 +6,11 @@ import com.onlinephoneauctions.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.onlinephoneauctions.controller.RegisterController.isValidFormat;
@@ -27,17 +24,22 @@ public class AuctionController {
     private UserService userService;
 
     @GetMapping("/auctions")
-    public String showAuctions(ModelMap model) {
+    public String showAuctions(Model model) {
         model.addAttribute("user_id", userService.getUserId());
         model.addAttribute("auctions", auctionService.retrieveActiveAuctions());
         return "/auctions";
     }
 
     @GetMapping("/auctions/delete")
-    public String deleteAuction(@RequestParam String id,  ModelMap model) {
+    public String deleteAuction(@RequestParam String id, Model model) {
         //model.addAttribute("user_id", userService.getUserId());
         //model.addAttribute("auctions", auctionService.retrieveActiveAuctions());
-        auctionService.deleteAuction(id);
+        if (auctionService.userHasAccessToAuction(id)) {
+            auctionService.deleteAuction(id);
+            model.addAttribute("errorMessage", "Auction successfully deleted!");
+        } else {
+            return "redirect:/error";
+        }
         return "redirect:/auctions";
     }
 
@@ -45,6 +47,16 @@ public class AuctionController {
     public String addAuction(@RequestParam(value = "id", required = false) String id,
                              final Model model) {
         if (id != null) {
+            //edit already existing auction
+            if (auctionService.userHasAccessToAuction(id)) {
+                auctionService.getAuctionInfo(id).forEach((attribute, value) -> {
+                    model.addAttribute(attribute, value);
+                });
+                List<AvailablePhonesDTO> phonesAvailable = auctionService.retrieveAvailablePhonesAndPhonesInAuction(id);
+                model.addAttribute("phonesAvailable", phonesAvailable);
+            } else {
+                return "redirect:/error";
+            }
 
         } else {
             List<AvailablePhonesDTO> phonesAvailable = auctionService.retrieveAvailablePhones();
@@ -56,70 +68,73 @@ public class AuctionController {
 
     @PostMapping("/auctions-add")
     public String addAuction(@RequestParam(value = "id", required = false) String id,
-                                   @RequestParam(value = "phones_in_auction", required = false) String phones_in_auction,
-                                   @RequestParam(value = "datetime_end", required = false) String datetime_end,
-                                   @RequestParam(value = "additional_info", required = false) String additional_info,
-                                   @RequestParam(value = "starting_price", required = false) String starting_price,
-                                   @RequestParam(value = "target_price", required = false) String target_price,
-                                   final Model model) {
+                             @RequestParam(value = "phones_in_auction", required = false) String phones_in_auction,
+                             @RequestParam(value = "datetime_end", required = false) String datetime_end,
+                             @RequestParam(value = "additional_info", required = false) String additional_info,
+                             @RequestParam(value = "starting_price", required = false) String starting_price,
+                             @RequestParam(value = "target_price", required = false) String target_price,
+                             final Model model) {
         String[] phones_in_auction_array = null;
-        if(phones_in_auction != null) {
+        if (phones_in_auction != null) {
             phones_in_auction_array = phones_in_auction.split(",");
         }
 
-        if(id != null) {
-
-        } else {
-            List<AvailablePhonesDTO> phonesAvailable = auctionService.retrieveAvailablePhones();
-            String[] finalPhones_in_auction_array = phones_in_auction_array;
-            if(finalPhones_in_auction_array != null && finalPhones_in_auction_array.length != 0) {
-                phonesAvailable.forEach(phone -> {
-                    for (String s : finalPhones_in_auction_array) {
-                        if(s.equals(phone.getPhoneId())) {
-                            phone.setSelected(true);
-                        }
+        List<AvailablePhonesDTO> phonesAvailable = auctionService.retrieveAvailablePhones();
+        String[] finalPhones_in_auction_array = phones_in_auction_array;
+        if (finalPhones_in_auction_array != null && finalPhones_in_auction_array.length != 0) {
+            phonesAvailable.forEach(phone -> {
+                for (String s : finalPhones_in_auction_array) {
+                    if (s.equals(phone.getPhoneId())) {
+                        phone.setSelected(true);
                     }
-                });
-            }
-            model.addAttribute("phonesAvailable", phonesAvailable);
+                }
+            });
         }
+        model.addAttribute("phonesAvailable", phonesAvailable);
 
-        if(StringUtils.isEmpty(phones_in_auction)) {
+        if (StringUtils.isEmpty(phones_in_auction)) {
             model.addAttribute("errorMessage", "You should add at least a phone to the auction!");
             addAttributes(model, datetime_end, starting_price, target_price, additional_info);
             return "/auctions-add";
         }
 
-        if(StringUtils.isEmpty(datetime_end)) {
+        if (StringUtils.isEmpty(datetime_end)) {
             model.addAttribute("errorMessage", "Auction end datetime cannot be empty!");
             addAttributes(model, datetime_end, starting_price, target_price, additional_info);
             return "/auctions-add";
         }
 
-        if(!isValidFormat("dd-MM-yyyy HH:mm:ss", datetime_end)) {
+        if (!isValidFormat("dd-MM-yyyy HH:mm:ss", datetime_end)) {
             model.addAttribute("errorMessage", "Auction end datetime format must be 'dd-MM-yyyy HH:mm:ss'!");
             addAttributes(model, datetime_end, starting_price, target_price, additional_info);
             return "/auctions-add";
         }
 
-        if(StringUtils.isEmpty(starting_price) || !starting_price.matches("[0-9]||[0-9]+.+[0-9]")) {
+        if (StringUtils.isEmpty(starting_price) || !starting_price.matches("\\d+\\.?(\\d+)?")) {
             model.addAttribute("errorMessage", "Starting price must be composed only of digits (e.g. '2', '100.3', etc.)!");
             addAttributes(model, datetime_end, starting_price, target_price, additional_info);
             return "/auctions-add";
         }
 
-        if(StringUtils.isEmpty(target_price) || !target_price.matches("[0-9]||[0-9]+.+[0-9]")) {
+        if (StringUtils.isEmpty(target_price) || !target_price.matches("\\d+\\.?(\\d+)?")) {
             model.addAttribute("errorMessage", "Target price must be composed only of digits (e.g. '2', '100.3', etc.)!");
             addAttributes(model, datetime_end, starting_price, target_price, additional_info);
             return "/auctions-add";
         }
-
-        // create new auction
-        auctionService.createAuction(phones_in_auction, datetime_end, additional_info, starting_price, target_price);
-
-        model.addAttribute("errorMessage", "Auction successfully created!");
-
-        return "/auctions";
+        if (id == null) {
+            // create new auction
+            auctionService.createAuction(phones_in_auction, datetime_end, additional_info, starting_price, target_price);
+            //model.addAttribute("errorMessage", "Auction successfully created!");
+        } else {
+            // update existing auction
+            if (auctionService.userHasAccessToAuction(id)) {
+                auctionService.updateAuction(id, phones_in_auction, datetime_end, additional_info, starting_price, target_price);
+                //model.addAttribute("errorMessage", "Auction successfully updated!");
+            } else {
+                return "redirect:/error";
+            }
+        }
+        return "redirect:/auctions";
     }
 
     private void addAttributes(Model model, String datetime_end, String starting_price,

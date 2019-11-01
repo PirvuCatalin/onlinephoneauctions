@@ -3,19 +3,12 @@ package com.onlinephoneauctions.service;
 import com.onlinephoneauctions.dbconnect.ConnectionUtil;
 import com.onlinephoneauctions.dto.AuctionInfoDTO;
 import com.onlinephoneauctions.dto.AvailablePhonesDTO;
-import org.apache.tomcat.jni.Local;
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import static com.onlinephoneauctions.security.WebSecurityConfig.passwordEncoder;
+import java.util.*;
 
 @Service
 public class AuctionService {
@@ -26,25 +19,25 @@ public class AuctionService {
         List<AuctionInfoDTO> activeAuctions = new ArrayList<>();
         List<HashMap<Integer, String>> activeAuctionsMap = ConnectionUtil.getMultipleColumns(
                 "SELECT ai.id, " +
-                            "phone_names.phone_names, " +
-                            "ai.starting_price, " +
-                            "ai.target_price, " +
-                            "ai.current_price_bidded, " +
-                            "ai.datetime_start, " +
-                            "ai.datetime_end, " +
-                            "ai.seller_id, " +
-                            "u.name, " +
-                            "ai.additional_info " +
+                        "phone_names.phone_names, " +
+                        "ai.starting_price, " +
+                        "ai.target_price, " +
+                        "ai.current_price_bidded, " +
+                        "ai.datetime_start, " +
+                        "ai.datetime_end, " +
+                        "ai.seller_id, " +
+                        "u.name, " +
+                        "ai.additional_info " +
                         "FROM auction_info ai " +
                         "INNER JOIN users u " +
-                            "ON u.id = ai.seller_id " +
+                        "ON u.id = ai.seller_id " +
                         "INNER JOIN (" +
-                            "SELECT group_concat(p.phone_model SEPARATOR ' + ') as phone_names, auction_info_id " +
-                            "FROM phones p, phones_in_auction pa " +
-                            "WHERE p.id = pa.phone_id " +
-                            "GROUP BY pa.auction_info_id" +
+                        "SELECT group_concat(p.phone_model SEPARATOR ' + ') as phone_names, auction_info_id " +
+                        "FROM phones p, phones_in_auction pa " +
+                        "WHERE p.id = pa.phone_id " +
+                        "GROUP BY pa.auction_info_id" +
                         ") phone_names " +
-                            "ON phone_names.auction_info_id = ai.id " +
+                        "ON phone_names.auction_info_id = ai.id " +
                         "WHERE ai.DATETIME_END >= CURRENT_TIMESTAMP",
                 10);
         activeAuctionsMap.forEach(map -> {
@@ -65,15 +58,6 @@ public class AuctionService {
     }
 
     public void deleteAuction(String id) {
-        List<HashMap<Integer, String>> ai =
-                ConnectionUtil.getMultipleColumns("SELECT seller_id FROM auction_info WHERE id = '" + id + "'", 1);
-        if(ai.isEmpty() ||
-                ai.get(0) == null ||
-                ai.get(0).isEmpty() ||
-                ai.get(0).get(1) == null ||
-                !ai.get(0).get(1).equals(userService.getUserId())) {
-            return;
-        }
         ConnectionUtil.parseUpdateQuery("DELETE FROM auction_info WHERE id = '" + id + "';");
         ConnectionUtil.parseUpdateQuery("DELETE FROM phones_in_auction WHERE auction_info_id = '" + id + "';");
     }
@@ -84,26 +68,99 @@ public class AuctionService {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime datetime_start = LocalDateTime.now();
         ConnectionUtil.parseUpdateQuery("INSERT INTO auction_info (id, datetime_start, datetime_end, seller_id, additional_info, starting_price, target_price, current_price_bidded) VALUES " +
-                "('" + auction_info_id + "', parsedatetime('" + dtf.format(datetime_start) + "', 'dd-MM-yyyy hh:mm:ss')" + ", parsedatetime('" + datetime_end + "', 'dd-MM-yyyy hh:mm:ss')" + ", '" + userService.getUserId() + "', '"  + additional_info + "', " + starting_price + ", " + target_price + ", " + 0 + ")");
+                "('" + auction_info_id + "', parsedatetime('" + dtf.format(datetime_start) + "', 'dd-MM-yyyy hh:mm:ss')" + ", parsedatetime('" + datetime_end + "', 'dd-MM-yyyy hh:mm:ss')" + ", '" + userService.getUserId() + "', '" + additional_info + "', " + starting_price + ", " + target_price + ", " + 0 + ")");
 
         String[] phones_in_auction_array = phones_in_auction.split(",");
         String query = "INSERT INTO PHONES_IN_AUCTION (id, auction_info_id, phone_id) VALUES ";
         for (String phone_id : phones_in_auction_array) {
             query += "('" + UUID.randomUUID().toString() + "', '" + auction_info_id + "', '" + phone_id + "'),";
         }
-        if(query.endsWith(",")) {
-            query = query.substring(0,query.length() - 1);
+        if (query.endsWith(",")) {
+            query = query.substring(0, query.length() - 1);
         }
         ConnectionUtil.parseUpdateQuery(query);
     }
 
     public List<AvailablePhonesDTO> retrieveAvailablePhones() {
-        List<AvailablePhonesDTO> availablePhonesDTOList= new ArrayList<>();
+        List<AvailablePhonesDTO> availablePhonesDTOList = new ArrayList<>();
         List<HashMap<Integer, String>> phones =
-            ConnectionUtil.getMultipleColumns("SELECT id, phone_brand || ' ' || phone_model as phoneName FROM phones;", 2);
+                ConnectionUtil.getMultipleColumns("SELECT id, phone_brand || ' ' || phone_model as phoneName FROM phones;", 2);
         phones.forEach(phone -> {
             availablePhonesDTOList.add(new AvailablePhonesDTO(phone.get(1), phone.get(2), false));
         });
         return availablePhonesDTOList;
+    }
+
+    public List<AvailablePhonesDTO> retrieveAvailablePhonesAndPhonesInAuction(String auction_info_id) {
+        List<AvailablePhonesDTO> availablePhonesDTOList = new ArrayList<>();
+        List<String> phonesInAuction = retrievePhonesInAuction(auction_info_id);
+        List<HashMap<Integer, String>> phones =
+                ConnectionUtil.getMultipleColumns("SELECT id, phone_brand || ' ' || phone_model as phoneName FROM phones;", 2);
+        phones.forEach(phone -> {
+            boolean isSelected = false;
+            for (String phoneInAuction : phonesInAuction) {
+                if (phoneInAuction.equals(phone.get(1))) {
+                    isSelected = true;
+                }
+            }
+            availablePhonesDTOList.add(new AvailablePhonesDTO(phone.get(1), phone.get(2), isSelected));
+        });
+        return availablePhonesDTOList;
+    }
+
+    public List<String> retrievePhonesInAuction(String auction_info_id) {
+        List<String> phoneInAuctionList = new ArrayList<>();
+        List<HashMap<Integer, String>> phonesInAuction =
+                ConnectionUtil.getMultipleColumns("SELECT phone_id FROM phones_in_auction WHERE auction_info_id = '" + auction_info_id + "';", 1);
+        phonesInAuction.forEach(phone -> {
+            phoneInAuctionList.add(phone.get(1));
+        });
+        return phoneInAuctionList;
+    }
+
+    public Map<String, String> getAuctionInfo(String auction_info_id) {
+        Map<String, String> map = new HashMap<>();
+        List<HashMap<Integer, String>> auctionList = ConnectionUtil.getMultipleColumns(
+                "SELECT ai.starting_price, " +
+                        "ai.target_price, " +
+                        "ai.datetime_end, " +
+                        "ai.additional_info " +
+                        "FROM auction_info ai " +
+                        "WHERE ai.id = '" + auction_info_id + "'",
+                4);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        DateTimeFormatter dbDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+        HashMap<Integer, String> auctionInfo = auctionList.get(0);
+        map.put("starting_price", auctionInfo.get(1));
+        map.put("target_price", auctionInfo.get(2));
+        map.put("datetime_end", LocalDateTime.parse(auctionInfo.get(3), dbDtf).format(dtf));
+        map.put("additional_info", auctionInfo.get(4));
+        return map;
+    }
+
+    public boolean userHasAccessToAuction(String auction_info_id) {
+        List<HashMap<Integer, String>> auctionList = ConnectionUtil.getMultipleColumns(
+                "SELECT ai.id " +
+                        "FROM auction_info ai " +
+                        "WHERE ai.id = '" + auction_info_id + "' " +
+                        "AND ai.seller_id = '" + userService.getUserId() + "'",
+                1);
+        return !auctionList.isEmpty() && auctionList.get(0) != null && !auctionList.get(0).isEmpty() && auctionList.get(0).get(1) != null;
+    }
+
+    public void updateAuction(String auction_info_id, String phones_in_auction, String datetime_end, String additional_info,
+                              String starting_price, String target_price) {
+        ConnectionUtil.parseUpdateQuery("UPDATE auction_info SET datetime_end = parsedatetime('" + datetime_end + "', 'dd-MM-yyyy hh:mm:ss')" + ", additional_info = '" + additional_info + "', starting_price = '" + starting_price + "', target_price = '" + target_price + "' WHERE id = '" + auction_info_id + "'");
+        ConnectionUtil.parseUpdateQuery("DELETE FROM phones_in_auction WHERE auction_info_id = '" + auction_info_id + "'");
+
+        String[] phones_in_auction_array = phones_in_auction.split(",");
+        String query = "INSERT INTO PHONES_IN_AUCTION (id, auction_info_id, phone_id) VALUES ";
+        for (String phone_id : phones_in_auction_array) {
+            query += "('" + UUID.randomUUID().toString() + "', '" + auction_info_id + "', '" + phone_id + "'),";
+        }
+        if (query.endsWith(",")) {
+            query = query.substring(0, query.length() - 1);
+        }
+        ConnectionUtil.parseUpdateQuery(query);
     }
 }

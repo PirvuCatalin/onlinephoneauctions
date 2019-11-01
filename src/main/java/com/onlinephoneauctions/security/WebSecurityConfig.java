@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/*todo*/**").hasAuthority("USER")
                 .antMatchers("/", "/*account*/**").hasAuthority("USER")
                 .antMatchers("/", "/*auctions*/**").hasAuthority("USER")
+                .antMatchers("/", "/*auctions-add*/**").hasAuthority("USER")
                 .and().formLogin().loginPage("/login").permitAll();
         http.csrf().disable();
         http.headers().frameOptions().disable();
