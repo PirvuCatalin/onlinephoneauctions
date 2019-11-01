@@ -1,0 +1,19 @@
+<nav role="navigation" class="navbar navbar-default">
+
+    <div class="">
+        <a href="http://www.github.com/PirvuCatalin" class="navbar-brand">OnlinePhoneAuctions</a>
+    </div>
+
+    <div class="navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/welcome.jsp")){%>active<%}%>"><a href="/">Home</a></li>
+            <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/account.jsp")){%>active<%}%>"><a href="/account">Account</a></li>
+            <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/auctions.jsp")){%>active<%}%>"><a href="/auctions">Auctions</a></li>
+            <li class="<% if(request.getRequestURI().equals("/WEB-INF/jsp/list-todos.jsp")){%>active<%}%>"><a href="/list-todos">Todos</a></li>
+        </ul>
+        <ul class="<% if(request.getUserPrincipal() == null){%>hidden<%}%> nav navbar-nav navbar-right">
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+
+</nav>
