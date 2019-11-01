@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Spring-Boot-First-Web-Application" />
+        <module name="SpringBoot-OnlinePhoneAuctions" />
       </profile>
     </annotationProcessing>
   </component>
