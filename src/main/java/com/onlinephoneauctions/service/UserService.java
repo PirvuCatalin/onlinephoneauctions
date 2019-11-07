@@ -2,6 +2,7 @@ package com.onlinephoneauctions.service;
 
 import com.onlinephoneauctions.dbconnect.ConnectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,6 +33,19 @@ public class UserService {
             return ((UserDetails) principal).getUsername();
         }
         return principal.toString();
+    }
+
+    public boolean isUserAdmin() {
+        Object principal = SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            for (GrantedAuthority authority : ((UserDetails) principal).getAuthorities()) {
+                if(authority.getAuthority().equals("ADMIN")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Map<String, String> getUserInfo() {
@@ -82,8 +97,10 @@ public class UserService {
                 "('" + UUID.randomUUID().toString() + "', '" + name + "', '" + birthday + "', '" + address_detail + "', '" + city + "', '" + country + "', '" + cards_id + "', '" + user_credentials_id + "')");
         ConnectionUtil.parseUpdateQuery("INSERT INTO cards (id, card_number, card_expiry_date, card_cvv, cardholder_name) VALUES " +
                 "('" + cards_id + "', '', '', '', '')");
+        List<SimpleGrantedAuthority> list = new ArrayList<>();
+        list.add(new SimpleGrantedAuthority("USER"));
         inMemoryUserDetailsManager.createUser(
-                new User(username, passwordEncoder().encode(password), com.sun.tools.javac.util.List.of(new SimpleGrantedAuthority("USER")))
+                new User(username, passwordEncoder().encode(password), list)
         );
     }
 

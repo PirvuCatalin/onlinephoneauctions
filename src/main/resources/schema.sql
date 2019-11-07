@@ -34,6 +34,7 @@ CREATE TABLE AUCTION_INFO (
   id VARCHAR(255) NOT NULL,
   datetime_start TIMESTAMP NOT NULL,
   datetime_end TIMESTAMP NOT NULL,
+  is_validated BOOLEAN NOT NULL,
   seller_id VARCHAR(255) NOT NULL,
   additional_info VARCHAR(255) NOT NULL,
   starting_price DOUBLE NOT NULL,

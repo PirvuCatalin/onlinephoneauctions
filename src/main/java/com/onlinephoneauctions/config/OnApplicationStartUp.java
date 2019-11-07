@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 @Component
 public class OnApplicationStartUp {
@@ -26,9 +27,20 @@ public class OnApplicationStartUp {
         List<HashMap<Integer, String>> credentials = ConnectionUtil.
                 getMultipleColumns("SELECT username, password FROM user_credentials", 2);
         credentials.forEach(map -> {
-            inMemoryUserDetailsManager.createUser(
-                    new User(map.get(1), map.get(2), com.sun.tools.javac.util.List.of(new SimpleGrantedAuthority("USER")))
-            );
+            if(map.get(1).equals("admin")) {
+                List<SimpleGrantedAuthority> list = new ArrayList<>();
+                list.add(new SimpleGrantedAuthority("USER"));
+                list.add(new SimpleGrantedAuthority("ADMIN"));
+                inMemoryUserDetailsManager.createUser(
+                        new User(map.get(1), map.get(2), list)
+                );
+            } else {
+                List<SimpleGrantedAuthority> list = new ArrayList<>();
+                list.add(new SimpleGrantedAuthority("USER"));
+                inMemoryUserDetailsManager.createUser(
+                        new User(map.get(1), map.get(2), list)
+                );
+            }
         });
     }
 }
