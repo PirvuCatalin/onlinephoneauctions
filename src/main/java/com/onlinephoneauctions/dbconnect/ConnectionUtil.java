@@ -6,10 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Class that contains the necessary static methods to retrieve the Connection with the database from VCAP_SERVICES.
+ * Class that contains the necessary static methods to retrieve the Connection with the database and make the specific requests.
+ * This class will automatically connect to the database on server start-up (using the static initializer block), if not it will
+ * probably fail miserably and will require the administrator to check some logs.
  */
 public class ConnectionUtil {
+    /**
+     * {@link String} that contains the database url with the user and password defined in
+     * <a href="file:../application.properties">/resources/application.properties</a>
+     */
     private static String DB_URL = "jdbc:h2:mem:testdb;USER=sa;PASSWORD=password";
+    /**
+     * {@link Connection} containing the connection to the database that will be initialized on server start-up in the static initializer block
+     */
     private static Connection conn;
 
     static {
@@ -20,28 +29,13 @@ public class ConnectionUtil {
         }
     }
 
-    private ConnectionUtil() {
-    }
-
     /**
-     * Returns the Connection object.
-     * Requires the JDBC URL as input.
-     */
-    public static Connection getConnection() {
-        if (conn == null) {
-            try {
-                conn = DriverManager.getConnection(DB_URL);
-            } catch (Exception e) {
-                System.out.print("Connection Error: ");
-                e.printStackTrace();
-            }
-        }
-        return conn;
-    }
-
-    /**
-     * The output of this method is not guaranteed to work properly when
-     * the given query is not returning the requested number of columns
+     * Method used for selecting from the database.
+     * The output of this method is not guaranteed to work properly when the given query is not returning the requested number of columns!
+     * This is a helper method that lets the user work with classic Java objects, rather than {@link ResultSet} and other {@link java.sql} objects
+     *
+     * @param query           the query
+     * @param numberOfColumns the number of columns expected to be returned
      */
     public static List<HashMap<Integer, String>> getMultipleColumns(String query, int numberOfColumns) {
         List<HashMap<Integer, String>> response = new ArrayList<>();
@@ -63,6 +57,9 @@ public class ConnectionUtil {
         return response;
     }
 
+    /**
+     * Method used for updating / inserting into the database.
+     */
     public static String parseUpdateQuery(String query) {
         int rowCount = 0;
         try {

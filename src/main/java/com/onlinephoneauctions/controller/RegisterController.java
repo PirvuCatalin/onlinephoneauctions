@@ -20,11 +20,35 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Method used for returning whether or not an input String containing a date value is following the input date format.
+     *
+     * @param format the format to respected by the value
+     * @param value  the value that must respect the format
+     */
+    public static boolean isValidFormat(String format, String value) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
+    }
+
     @GetMapping("/register")
     public String register() {
         return "register";
     }
 
+    /**
+     * Endpoint used for registering a new user.
+     * This method also validates the given input.
+     */
     @PostMapping("/register")
     public RedirectView register(@RequestParam(value = "username", required = false) String username,
                                  @RequestParam(value = "password", required = false) String password,
@@ -59,37 +83,37 @@ public class RegisterController {
             return new RedirectView("/register");
         }
 
-        if(StringUtils.isEmpty(name)) {
+        if (StringUtils.isEmpty(name)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Name cannot be empty!");
             addAttributes(redirectAttributes, username, name, birthday, address_detail, city, country);
             return new RedirectView("/register");
         }
 
-        if(StringUtils.isEmpty(birthday)) {
+        if (StringUtils.isEmpty(birthday)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Birthday cannot be empty!");
             addAttributes(redirectAttributes, username, name, birthday, address_detail, city, country);
             return new RedirectView("/register");
         }
 
-        if(!isValidFormat("yyyy-MM-dd", birthday)) {
+        if (!isValidFormat("yyyy-MM-dd", birthday)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Birthday format must be 'yyyy-MM-dd'!");
             addAttributes(redirectAttributes, username, name, birthday, address_detail, city, country);
             return new RedirectView("/register");
         }
 
-        if(StringUtils.isEmpty(address_detail)) {
+        if (StringUtils.isEmpty(address_detail)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Address Detail cannot be empty!");
             addAttributes(redirectAttributes, username, name, birthday, address_detail, city, country);
             return new RedirectView("/register");
         }
 
-        if(StringUtils.isEmpty(city)) {
+        if (StringUtils.isEmpty(city)) {
             redirectAttributes.addFlashAttribute("errorMessage", "City cannot be empty!");
             addAttributes(redirectAttributes, username, name, birthday, address_detail, city, country);
             return new RedirectView("/register");
         }
 
-        if(StringUtils.isEmpty(country)) {
+        if (StringUtils.isEmpty(country)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Country cannot be empty!");
             addAttributes(redirectAttributes, username, name, birthday, address_detail, city, country);
             return new RedirectView("/register");
@@ -102,27 +126,16 @@ public class RegisterController {
         return new RedirectView("/login");
     }
 
+    /**
+     * Helper method used for adding attributes to the frontend.
+     */
     private void addAttributes(RedirectAttributes redirectAttributes, String username, String name, String birthday,
-                          String address_detail, String city, String country) {
+                               String address_detail, String city, String country) {
         redirectAttributes.addFlashAttribute("username", username);
         redirectAttributes.addFlashAttribute("name", name);
         redirectAttributes.addFlashAttribute("birthday", birthday);
         redirectAttributes.addFlashAttribute("address_detail", address_detail);
         redirectAttributes.addFlashAttribute("city", city);
         redirectAttributes.addFlashAttribute("country", country);
-    }
-
-    public static boolean isValidFormat(String format, String value) {
-        Date date = null;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(format);
-            date = sdf.parse(value);
-            if (!value.equals(sdf.format(date))) {
-                date = null;
-            }
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-        return date != null;
     }
 }

@@ -12,6 +12,9 @@ public class WelcomeController {
     @Autowired
     private UserService userService;
 
+    /**
+     * The welcome endpoint of the website, used to print the logged in username and to be redirected after successful login.
+     */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showWelcomePage(ModelMap model) {
         model.put("name", userService.getLoggedInUserName());

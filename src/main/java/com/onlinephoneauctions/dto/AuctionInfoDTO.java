@@ -12,6 +12,7 @@ public class AuctionInfoDTO {
     private String seller_id;
     private String seller_name;
     private String additional_info;
+    private boolean is_successfully_done;
 
     public AuctionInfoDTO() {
     }
@@ -33,76 +34,76 @@ public class AuctionInfoDTO {
         return id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public double getStarting_price() {
-        return starting_price;
-    }
-
-    public double getTarget_price() {
-        return target_price;
-    }
-
-    public double getCurrent_price_bidded() {
-        return current_price_bidded;
-    }
-
-    public String getDatetime_start() {
-        return datetime_start;
-    }
-
-    public String getDatetime_end() {
-        return datetime_end;
-    }
-
-    public String getSeller_id() {
-        return seller_id;
-    }
-
-    public String getSeller_name() {
-        return seller_name;
-    }
-
-    public String getAdditional_info() {
-        return additional_info;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public double getStarting_price() {
+        return starting_price;
+    }
+
     public void setStarting_price(double starting_price) {
         this.starting_price = starting_price;
+    }
+
+    public double getTarget_price() {
+        return target_price;
     }
 
     public void setTarget_price(double target_price) {
         this.target_price = target_price;
     }
 
+    public double getCurrent_price_bidded() {
+        return current_price_bidded;
+    }
+
     public void setCurrent_price_bidded(double current_price_bidded) {
         this.current_price_bidded = current_price_bidded;
+    }
+
+    public String getDatetime_start() {
+        return datetime_start;
     }
 
     public void setDatetime_start(String datetime_start) {
         this.datetime_start = datetime_start;
     }
 
+    public String getDatetime_end() {
+        return datetime_end;
+    }
+
     public void setDatetime_end(String datetime_end) {
         this.datetime_end = datetime_end;
+    }
+
+    public String getSeller_id() {
+        return seller_id;
     }
 
     public void setSeller_id(String seller_id) {
         this.seller_id = seller_id;
     }
 
+    public String getSeller_name() {
+        return seller_name;
+    }
+
     public void setSeller_name(String seller_name) {
         this.seller_name = seller_name;
+    }
+
+    public String getAdditional_info() {
+        return additional_info;
     }
 
     public void setAdditional_info(String additional_info) {
@@ -123,5 +124,13 @@ public class AuctionInfoDTO {
                 ", seller_name='" + seller_name + '\'' +
                 ", additional_info='" + additional_info + '\'' +
                 '}';
+    }
+
+    public boolean isIs_successfully_done() {
+        return is_successfully_done;
+    }
+
+    public void setIs_successfully_done(boolean is_successfully_done) {
+        this.is_successfully_done = is_successfully_done;
     }
 }

@@ -25,7 +25,13 @@
             <font color="red">${errorMessage}</font>
         </p>
         <% if (request.getParameter("id") != null) { %>
-        <form action="<%= "/auctions-add?id=" + request.getParameter("id") %>" method="POST" class="center-block"
+        <form action="
+          <%  if (request.getParameter("returnToMyAuctions") != null) {
+              out.print("/auctions-add?id=" + request.getParameter("id") + "&returnToMyAuctions=true");
+          } else {
+              out.print("/auctions-add?id=" + request.getParameter("id"));
+          } %>
+        " method="POST" class="center-block"
               style="max-width: 400px">
                 <% } else {%>
             <form action="/auctions-add" method="POST" class="center-block" style="max-width: 400px">
@@ -35,9 +41,12 @@
                 </fieldset>
 
                 <fieldset class="form-group">
-                    <label>Auction End Datetime</label> <input required name="datetime_end" type="text"
+                    <label>Auction End Datetime</label>
+                    <input required name="datetime_end" type="text"
+                        <%  if (request.getParameter("id") != null) out.print("readonly"); %>
                                                                value="${datetime_end}" class="form-control"
                                                                placeholder="dd-MM-yyyy HH:mm:ss"/>
+                    <div class="text text-muted">Note: The auction end time cannot be changed.</div>
                 </fieldset>
                 <fieldset class="form-group">
                     <label>Additional Info</label> <input name="additional_info" type="text" value="${additional_info}"

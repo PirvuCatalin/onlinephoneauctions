@@ -13,6 +13,10 @@ public class ExceptionController {
 
     private Log logger = LogFactory.getLog(ExceptionController.class);
 
+    /**
+     * Method used to log error when the view an user is trying to access (an endpoint) does not exist or it is invalid.
+     * This endpoint also redirects to the custom "/error" endpoint.
+     */
     @ExceptionHandler(Exception.class)
     public ModelAndView handleError(HttpServletRequest req, Exception ex) {
         logger.error("Request: " + req.getRequestURL() + " raised " + ex);

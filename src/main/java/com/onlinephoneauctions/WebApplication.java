@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class WebApplication {
 
+    /**
+     * Starting point of the Spring Boot application.
+     */
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(WebApplication.class, args);
     }
