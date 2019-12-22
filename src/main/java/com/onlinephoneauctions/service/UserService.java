@@ -56,7 +56,7 @@ public class UserService {
     /**
      * This method is used for getting personal details of the logged in user from the database.
      *
-     * @return {@link HashMap} containing the name, birthday, address details, city and country of the logged in user
+     * @return HashMap containing the name, birthday, address details, city and country of the logged in user
      */
     public Map<String, String> getUserInfo() {
         Map<String, String> map = new HashMap<>();
@@ -78,7 +78,7 @@ public class UserService {
     /**
      * This method is used for getting card details of the logged in user from the database.
      *
-     * @return {@link HashMap} containing HIGH RISK DECRYPTED information of the current logged in user: card number,
+     * @return HashMap containing HIGH RISK DECRYPTED information of the current logged in user: card number,
      * card expiry date, card cvv/cvc and cardholder's name
      */
     public Map<String, String> getUserCardInfo() {
@@ -101,7 +101,7 @@ public class UserService {
     }
 
     /**
-     * @return {@link String} containing the id of the current logged in user from the database.
+     * @return String containing the id of the current logged in user from the database.
      */
     public String getUserId() {
         String query =
@@ -176,7 +176,7 @@ public class UserService {
 
     /**
      * @param password the password to check for match
-     * @return {@link boolean} stating whether or not the password is inserted correctly
+     * @return boolean stating whether or not the password is inserted correctly
      */
     public boolean isPasswordCorrect(String password) {
         String oldPassword = inMemoryUserDetailsManager.loadUserByUsername(getLoggedInUserName()).getPassword();

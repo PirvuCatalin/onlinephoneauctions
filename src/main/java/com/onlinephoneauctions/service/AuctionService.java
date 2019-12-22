@@ -25,7 +25,7 @@ public class AuctionService {
     private UserService userService;
 
     /**
-     * @return {@link List<AuctionInfoDTO>} containing the currently active auctions
+     * @return java.util.List&lt;AuctionInfoDTO&gt; containing the currently active auctions
      */
     public List<AuctionInfoDTO> retrieveActiveAuctions() {
         List<AuctionInfoDTO> activeAuctions = new ArrayList<>();
@@ -58,7 +58,8 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link AuctionInfoDTO} containing the information of the auction with the id specified by parameter {@param id}
+     * @return AuctionInfoDTO containing the information of the auction with the id specified by parameter.
+     * @param id the id of the auction
      */
     public AuctionInfoDTO retrieveAuctionInfo(String id) {
         List<HashMap<Integer, String>> list = ConnectionUtil.getMultipleColumns(
@@ -109,7 +110,8 @@ public class AuctionService {
 
     /**
      * This method retrieved the auctions, completely with info about the winner / highest bidder.
-     * @return {@link List<BidDTO>} containing the bid of the auction specified by {@param id}
+     * @return java.util.List&lt;BidDTO&gt; containing the bid of the auction specified by the parameter.
+     * @param id the id of the auction
      */
     public List<BidDTO> retrieveBidsForAuction(String id) {
         List<BidDTO> listToReturn = new ArrayList<>();
@@ -143,9 +145,10 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link List<AuctionWithBidsDTO>} containing only the bids of the current logged in user specified by {@param userId},
+     * @return java.util.List&lt;AuctionWithBidsDTO&gt; containing only the bids of the current logged in user specified by the parameter,
      * also with information regarding the status (winner / highest bidder) and if the auction is ended and the current user is the winner,
      * it also gives the option to review the auction.
+     * @param userId the id of the user
      */
     public List<AuctionWithBidsDTO> retrieveMyBidsByAuction(String userId) {
         List<AuctionWithBidsDTO> auctionWithBids = new ArrayList<>();
@@ -224,7 +227,7 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link List<AuctionInfoDTO>} containing all the actives auctions filtered by the given input parameters
+     * @return List&lt;AuctionInfoDTO&gt; containing all the actives auctions filtered by the given input parameters
      */
     public List<AuctionInfoDTO> retrieveActiveAuctions(String[] phones_in_auction_array, String startingPrice, String currentPrice, String targetPrice, String sellerName) {
         List<AuctionInfoDTO> activeAuctions = new ArrayList<>();
@@ -426,7 +429,8 @@ public class AuctionService {
     }
 
     /**
-     * Method used to retrieve the active auctions of the user specified by parameter {@param userId}
+     * Method used to retrieve the active auctions of the user specified by parameter.
+     * @param userId the id of the user
      */
     public List<AuctionInfoDTO> retrieveMyActiveAuctions(String userId) {
         List<AuctionInfoDTO> activeAuctions = new ArrayList<>();
@@ -568,7 +572,8 @@ public class AuctionService {
     }
 
     /**
-     * Method used to retrieve the inactive auctions of the user specified by parameter {@param userId}
+     * Method used to retrieve the inactive auctions of the user specified by parameter.
+     * @param userId the id of the user
      */
     public List<AuctionInfoDTO> retrieveMyInactiveAuctions(String userId) {
         List<AuctionInfoDTO> allAuctions = new ArrayList<>();
@@ -697,7 +702,8 @@ public class AuctionService {
     }
 
     /**
-     * Method used to retrieve the not-validated auctions of the user specified by parameter {@param userId}
+     * Method used to retrieve the not-validated auctions of the user specified by parameter.
+     * @param userId the id of the user
      */
     public List<AuctionInfoDTO> retrieveMyNotValidatedAuctions(String userId) {
         List<AuctionInfoDTO> allAuctions = new ArrayList<>();
@@ -752,8 +758,9 @@ public class AuctionService {
     }
 
     /**
-     * Method used to delete the auction specified by parameter {@param id}.
+     * Method used to delete the auction specified by parameter.
      * This also deletes all the information from the database regarding the auction.
+     * @param id the id of the auction
      */
     public void deleteAuction(String id) {
         ConnectionUtil.parseUpdateQuery("DELETE FROM auction_info WHERE id = '" + id + "';");
@@ -761,7 +768,8 @@ public class AuctionService {
     }
 
     /**
-     * Method used to validate the auction specified by parameter {@param id}.
+     * Method used to validate the auction specified by parameter.
+     * @param id the id of the auction
      */
     public void validateAuction(String id) {
         ConnectionUtil.parseUpdateQuery("UPDATE auction_info SET is_Validated = true WHERE id = '" + id + "'");
@@ -792,7 +800,7 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link List<AvailablePhonesDTO>} containing all the available phones that can be added to an auction.
+     * @return java.util.List&lt;AvailablePhonesDTO&gt; containing all the available phones that can be added to an auction.
      */
     public List<AvailablePhonesDTO> retrieveAvailablePhones() {
         List<AvailablePhonesDTO> availablePhonesDTOList = new ArrayList<>();
@@ -805,7 +813,7 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link List<AvailablePhonesDTO>} containing all the available phones that can be added to an auction,
+     * @return List&lt;AvailablePhonesDTO&gt; containing all the available phones that can be added to an auction,
      * without specifying the phone brand.
      */
     public List<AvailablePhonesDTO> retrieveAvailablePhonesWithoutBrand() {
@@ -819,8 +827,9 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link List<AvailablePhonesDTO>} containing all the available phones that can be added to an auction, but also the ones
-     * that are already added to the auction specified by the input parameter {@param auction_info_id}.
+     * @return List&lt;AvailablePhonesDTO&gt; containing all the available phones that can be added to an auction, but also the ones
+     * that are already added to the auction specified by the input parameter.
+     * @param auction_info_id the id of the auction
      */
     public List<AvailablePhonesDTO> retrieveAvailablePhonesAndPhonesInAuction(String auction_info_id) {
         List<AvailablePhonesDTO> availablePhonesDTOList = new ArrayList<>();
@@ -840,8 +849,9 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link List<String>} containing all the phones that are already added to the auction,
-     * specified by the input parameter {@param auction_info_id}.
+     * @return Lis&lt;String&gt; containing all the phones that are already added to the auction,
+     * specified by the input parameter.
+     * @param auction_info_id the id of the auction
      */
     public List<String> retrievePhonesInAuction(String auction_info_id) {
         List<String> phoneInAuctionList = new ArrayList<>();
@@ -854,7 +864,8 @@ public class AuctionService {
     }
 
     /**
-     * @return {@link HashMap} containing the auction information specified by the input parameter {@param auction_info_id}.
+     * @return HashMap containing the auction information specified by the input parameter.
+     * @param auction_info_id the id of the auction
      */
     public Map<String, String> getAuctionInfo(String auction_info_id) {
         Map<String, String> map = new HashMap<>();
@@ -878,7 +889,7 @@ public class AuctionService {
 
     /**
      * @param auction_info_id the id of the auction
-     * @return {@link boolean} stating whether or not the auction is accessible by the current user (the user created it or not)
+     * @return boolean stating whether or not the auction is accessible by the current user (the user created it or not)
      */
     public boolean userHasAccessToAuction(String auction_info_id) {
         List<HashMap<Integer, String>> auctionList = ConnectionUtil.getMultipleColumns(
@@ -920,7 +931,7 @@ public class AuctionService {
 
     /**
      * @param auctionInfoDTO object containing information about the auction
-     * @return {@link boolean} stating whether or not the auction ca be completed manually (an auction that haven't reached
+     * @return boolean stating whether or not the auction ca be completed manually (an auction that haven't reached
      * the target price can be completed manually by the auction creator)
      */
     public boolean canBeManuallyDone(AuctionInfoDTO auctionInfoDTO) {
@@ -939,7 +950,7 @@ public class AuctionService {
      * The current user can bid to the auction only if it is not the admin, it is not the auction creator, the auction has not ended
      * and the last bid (the maximum) is not already his/her bid.
      * @param auctionInfoDTO object containing information about the auction
-     * @return {@link boolean} stating whether or not the current user can bid to the auction
+     * @return boolean stating whether or not the current user can bid to the auction
      */
     public boolean canBid(AuctionInfoDTO auctionInfoDTO) {
         if (userService.isUserAdmin()) {

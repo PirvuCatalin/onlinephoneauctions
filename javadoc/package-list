@@ -1,0 +1,7 @@
+com.onlinephoneauctions
+com.onlinephoneauctions.config
+com.onlinephoneauctions.controller
+com.onlinephoneauctions.dbconnect
+com.onlinephoneauctions.dto
+com.onlinephoneauctions.security
+com.onlinephoneauctions.service

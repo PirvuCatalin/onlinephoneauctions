@@ -13,7 +13,7 @@ import java.util.UUID;
 public class ReviewService {
 
     /**
-     * @return {@link ArrayList<ReviewsDTO>} containing all the reviews for the ended auctions of the website
+     * @return ArrayList&lt;ReviewsDTO&gt; containing all the reviews for the ended auctions of the website
      */
     public List<ReviewsDTO> retrieveAllReviews() {
         List<ReviewsDTO> reviews = new ArrayList<>();
@@ -46,7 +46,7 @@ public class ReviewService {
 
     /**
      * @param sellerName the name of the seller to filter by
-     * @return {@link ArrayList<ReviewsDTO>} containing all the reviews for the ended auctions of the website,
+     * @return ArrayList&lt;ReviewsDTO&gt; containing all the reviews for the ended auctions of the website,
      * filtered by seller's name
      */
     public List<ReviewsDTO> retrieveReviewsFilteredBySellerName(String sellerName) {

@@ -20,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * This method returns the encoder used for password encoding.
      *
-     * @return {@link PasswordEncoder} containing the encoder used for the in-memory user management of Spring Security
+     * @return PasswordEncoder containing the encoder used for the in-memory user management of Spring Security
      */
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * This method can be configured to contain default users, without relying on the database's input as seen on the commented out line.
      *
-     * @return {@link InMemoryUserDetailsManager} containing an empty in-memory user manager
+     * @return InMemoryUserDetailsManager containing an empty in-memory user manager
      */
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
