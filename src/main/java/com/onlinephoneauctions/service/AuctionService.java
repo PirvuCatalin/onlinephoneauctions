@@ -783,8 +783,8 @@ public class AuctionService {
         String auction_info_id = UUID.randomUUID().toString();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime datetime_start = LocalDateTime.now();
-        ConnectionUtil.parseUpdateQuery("INSERT INTO auction_info (id, datetime_start, datetime_end, is_validated, seller_id, additional_info, starting_price, target_price, current_price_bidded) VALUES " +
-                "('" + auction_info_id + "', parsedatetime('" + dtf.format(datetime_start) + "', 'dd-MM-yyyy hh:mm:ss')" + ", parsedatetime('" + datetime_end + "', 'dd-MM-yyyy hh:mm:ss')" + ", false, '" + userService.getUserId() + "', '" + additional_info + "', " + starting_price + ", " + target_price + ", " + 0 + ")");
+        ConnectionUtil.parseUpdateQuery("INSERT INTO auction_info (id, datetime_start, datetime_end, is_validated, is_successfully_done, seller_id, additional_info, starting_price, target_price, current_price_bidded) VALUES " +
+                "('" + auction_info_id + "', parsedatetime('" + dtf.format(datetime_start) + "', 'dd-MM-yyyy hh:mm:ss')" + ", parsedatetime('" + datetime_end + "', 'dd-MM-yyyy hh:mm:ss')" + ", false" + ", false, '" + userService.getUserId() + "', '" + additional_info + "', " + starting_price + ", " + target_price + ", " + 0 + ")");
 
         String[] phones_in_auction_array = phones_in_auction.split(",");
         String query = "INSERT INTO PHONES_IN_AUCTION (id, auction_info_id, phone_id) VALUES ";
