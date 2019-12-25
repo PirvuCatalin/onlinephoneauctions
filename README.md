@@ -1,7 +1,7 @@
 # OnlinePhoneAuctions
 
 This project is made for the 2019-2020 Database Course in the 3rd year of Faculty of Automatic Control and Computer Science, Politehnica University of Bucharest.
-It is a simple online auction house only for mobile phones.
+<b>It is a simple online auction house only for mobile phones.</b>
 
 It uses basic concepts of Spring Security, Relational Databases, an adapted MVC pattern (this adaptation is mainly used as we we're not allowed to use Persistence, but plain SQL syntax) and working with JSP and JS for the frontend development.
 
