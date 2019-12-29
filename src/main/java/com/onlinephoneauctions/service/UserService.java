@@ -82,7 +82,6 @@ public class UserService {
      * card expiry date, card cvv/cvc and cardholder's name
      */
     public Map<String, String> getUserCardInfo() {
-        //todo implement encrypt / decrypt mechanism for card info
         Map<String, String> map = new HashMap<>();
 
         List<HashMap<Integer, String>> userInfoList =
@@ -92,11 +91,10 @@ public class UserService {
             return map;
         }
         HashMap<Integer, String> userInfo = userInfoList.get(0);
-        map.put("card_number", userInfo.get(1));
-        map.put("card_expiry_date", userInfo.get(2));
-        map.put("card_cvv", userInfo.get(3));
-        map.put("cardholder_name", userInfo.get(4));
-
+        map.put("card_number", decode(userInfo.get(1)));
+        map.put("card_expiry_date", decode(userInfo.get(2)));
+        map.put("card_cvv", decode(userInfo.get(3)));
+        map.put("cardholder_name", decode(userInfo.get(4)));
         return map;
     }
 
@@ -137,7 +135,27 @@ public class UserService {
      * It does NOT contain validations, so before calling this, validate the user's input as it directly inserts into database.
      */
     public void updateCard(String card_number, String cardholder_name, String card_expiry_date, String card_cvv) {
-        ConnectionUtil.parseUpdateQuery("UPDATE cards SET card_number = '" + card_number + "', card_expiry_date = '" + card_expiry_date + "', card_cvv = '" + card_cvv + "', cardholder_name = '" + cardholder_name + "' WHERE id in (SELECT cards_id FROM users WHERE id = '" + getUserId() + "')");
+        ConnectionUtil.parseUpdateQuery("UPDATE cards SET card_number = '" + encode(card_number) +
+                        "', card_expiry_date = '" + encode(card_expiry_date) +
+                        "', card_cvv = '" + encode(card_cvv) +
+                        "', cardholder_name = '" + encode(cardholder_name) +
+                        "' WHERE id in (SELECT cards_id FROM users WHERE id = '" + getUserId() + "')");
+    }
+
+    /**
+     * @param text the text to encode
+     * @return the encoded text
+     */
+    private String encode(String text) {
+        return Base64.getEncoder().encodeToString(text.getBytes());
+    }
+
+    /**
+     * @param text the text to decode
+     * @return the decoded text
+     */
+    private String decode(String text) {
+        return new String(Base64.getDecoder().decode(text));
     }
 
     /**

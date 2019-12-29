@@ -11,10 +11,10 @@ INSERT INTO USER_CREDENTIALS (id, username, password) VALUES
 ('a8293003-0996-4496-9a0f-93bf9b5c86cf', 'carina', '$2a$10$/vRJ1RjbxsH6MrNSFLyzVezP4oERzHUVykO37Seg67ceRZuTrG2Hi');-- username "carina" , password "stoica"
 
 INSERT INTO CARDS (id, card_number, card_expiry_date, card_cvv, cardholder_name) VALUES
-('8f294277-21bd-4d71-977c-ac4b8518814f', '4018359857520680', '11/23', '994', 'PIRVU CATALIN'),
-('88ee5a42-3747-4edb-bfca-effdd5cd146d', '5127994616377793', '07/24', '451', 'ANCA STEFAN'),
-('e61fe61a-236b-4f6c-a2c7-9429af8a2416', '1444444444444444', '12/99', '000', 'ADMIN'),
-('95c7a836-5443-4a73-b405-c96c9d1d0110', '5168441223630339', '10/22', '123', 'STOICA CARINA');
+('8f294277-21bd-4d71-977c-ac4b8518814f', 'NDAxODM1OTg1NzUyMDY4MA==', 'MTEvMjM=', 'OTk0', 'UElSVlUgQ0FUQUxJTg=='), --'4018359857520680', '11/23', '994', 'PIRVU CATALIN'
+('88ee5a42-3747-4edb-bfca-effdd5cd146d', 'NTEyNzk5NDYxNjM3Nzc5Mw==', 'MDcvMjQ=', 'NDUx', 'QU5DQSBTVEVGQU4='), --'5127994616377793', '07/24', '451', 'ANCA STEFAN'
+('e61fe61a-236b-4f6c-a2c7-9429af8a2416', 'MTQ0NDQ0NDQ0NDQ0NDQ0NA==', 'MTIvOTk=', 'MDAw', 'QURNSU4='), -- '1444444444444444', '12/99', '000', 'ADMIN'
+('95c7a836-5443-4a73-b405-c96c9d1d0110', 'NTE2ODQ0MTIyMzYzMDMzOQ==', 'MTAvMjI=', 'MTIz', 'U1RPSUNBIENBUklOQQ=='); --'5168441223630339', '10/22', '123', 'STOICA CARINA'
 
 INSERT INTO AUCTION_INFO (id, datetime_start, datetime_end, is_validated, is_successfully_done, seller_id, additional_info, starting_price, target_price, current_price_bidded) VALUES
 ('9c98bdb3-fc8f-4a6b-aed3-260883c541ed', parsedatetime('29-10-2019 18:47:52', 'dd-MM-yyyy hh:mm:ss'), parsedatetime('17-03-2020 16:50:52', 'dd-MM-yyyy hh:mm:ss'), true, false, 'dd60294b-6f21-4449-8796-646ce0c5a98a', 'If the target price is not reached, I''m going to cancel the auction!',100,500,450),
