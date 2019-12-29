@@ -17,10 +17,10 @@ If you want to run this on your local machine, you will need at least Java 8 (JR
 3. Navigate to folder "deploy" under this repository
 4. Run "java -jar SpringBoot-OnlinePhoneAuctions-0.0.1-SNAPSHOT.jar"
 5. Server should start running in under 5 seconds under https://localhost:8080 
-and the database cand be found at https://localhost:8080/h2
+and the database can be found at https://localhost:8080/h2
 ```
 
-You can also generate your own <b>jar</b> file using maven. Just run the maven goal `mvn clean package` and you're good to go, just follow the steps above.
+You can also generate your own <b>jar</b> file using maven. Just run the maven goal `mvn clean package` and you're good to go, just follow the steps 4-5 above.
 
 Some users that can also be found in data.sql file (username / password):
 ```
