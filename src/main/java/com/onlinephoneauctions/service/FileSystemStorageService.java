@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileSystemStorageService {
-    private static String UPLOAD_LOCATION = "/Users/i507132/Documents/Facultate/ImageProcessor/Sub Folder";
+    private static String UPLOAD_LOCATION = "src/txt-files";
 
     private Path uploadLocation;
 
