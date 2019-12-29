@@ -16,7 +16,7 @@ $(document).ready(function() {
         $('#divUploadSuccess').show(0).delay(10000).hide(0);
     }
 
-    listUploadedFiles();
+    //listUploadedFiles();
 
 });
 
